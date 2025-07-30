@@ -30,7 +30,7 @@
 #pragma once
 #include <charconv>
 #include "ankerl/unordered_dense.h"
-#include "container/external_string.h"
+#include "fluent/container/external_string.h"
 #include "value.h"
 
 namespace fluent::cli
