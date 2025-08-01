@@ -324,7 +324,7 @@ namespace fluent::cli
                         return def.get<T>();
                     }
 
-                    return str_flags.at(name);
+                    return str_args.at(name);
                 }
             }
             else if constexpr (std::is_same_v<T, int>)
@@ -351,7 +351,7 @@ namespace fluent::cli
                         return def.get<T>();
                     }
 
-                    return int_flags.at(name);
+                    return int_args.at(name);
                 }
             }
             else if constexpr (std::is_same_v<T, float>)
@@ -503,7 +503,7 @@ namespace fluent::cli
                             {
                                 parsing_success = parse_value<bool, int>(
                                     val,
-                                    flag
+                                    cmd
                                 );
 
                                 break;
@@ -513,7 +513,7 @@ namespace fluent::cli
                             {
                                 parsing_success = parse_value<float, int>(
                                     val,
-                                    flag
+                                    cmd
                                 );
 
                                 break;
@@ -523,7 +523,7 @@ namespace fluent::cli
                             {
                                 parsing_success = parse_value<int, int>(
                                     val,
-                                    flag
+                                    cmd
                                 );
 
                                 break;
@@ -533,7 +533,7 @@ namespace fluent::cli
                             {
                                 parsing_success = parse_value<container::external_string, int>(
                                     val,
-                                    flag
+                                    cmd
                                 );
 
                                 break;
@@ -753,7 +753,7 @@ namespace fluent::cli
 
                         if (!waiting_value)
                         {
-                            str_args[cmd] = cmd_val.get<container::external_string>();
+                            bool_args[cmd] = cmd_val.get<bool>();
                         }
                         else
                         {
