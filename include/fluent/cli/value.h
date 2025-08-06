@@ -29,7 +29,7 @@
 
 #pragma once
 
-namespace fluent::cli
+namespace zelix::cli
 {
     class value
     {

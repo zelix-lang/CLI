@@ -41,7 +41,7 @@
 #define ANSI_DIM "\e[2m"
 #define ANSI_DIM_END "\e[22m"
 
-namespace fluent::cli
+namespace zelix::cli
 {
     class app
     {

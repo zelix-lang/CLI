@@ -33,7 +33,7 @@
 #include "fluent/container/external_string.h"
 #include "value.h"
 
-namespace fluent::cli
+namespace zelix::cli
 {
     class error
     {
