@@ -1,6 +1,6 @@
-# Fluent CLI
+# Zelix CLI
 
-Fluent CLI is a rewrite of the already-existing
+Zelix CLI is a rewrite of the already-existing
 [fluent_libc/cli](https://github.com/rodrigoo-r/cli) in C++ instead of C.
 It is a library that provides a simple way to create command line interfaces
 while staying highly performant.
@@ -9,7 +9,7 @@ while staying highly performant.
 
 - Default values for flags and commands.
 - Automatic help generation **(With colors!)**
-- Uses Fluent STL instead of the standard library.
+- Uses Zelix STL instead of the standard library.
 - Mostly zero-copy parsing.
 - Easy-to-use API.
 - Built with performance in mind.
@@ -23,20 +23,20 @@ With CMake:
 include(FetchContent)
 
 FetchContent_Declare(
-        fluent_cli
-        GIT_REPOSITORY https://github.com/fluent-lang/CLI.git
+        zelix_cli
+        GIT_REPOSITORY https://github.com/zelix-lang/CLI.git
         GIT_TAG        master
 )
 
-FetchContent_MakeAvailable(fluent_cli)
-target_link_libraries(Fluent PRIVATE fluent::cli)
+FetchContent_MakeAvailable(zelix_cli)
+target_link_libraries(Project PRIVATE zelix::cli)
 ```
 
 ## Usage
 
 ```c++
-#include "fluent/cli/app.h"
-using namespace fluent;
+#include "zelix/cli/app.h"
+using namespace zelix;
 
 int main(const int argc, const char **argv)
 {
@@ -84,8 +84,8 @@ int main(const int argc, const char **argv)
 
 ## Example help output
 
-![Fluent CLI Example output](assets/example_output_1.png)
-![Fluent CLI Example output](assets/example_output_2.png)
+![Zelix CLI Example output](assets/example_output_1.png)
+![Zelix CLI Example output](assets/example_output_2.png)
 
 ## Performance considerations
 
@@ -101,7 +101,7 @@ However, there are also some considerations:
     `strlen()` calls to determine the length of the command or flag names.
     This is done only once per command or flag, so it should not be a problem
     in most cases. **However, there is a way to avoid this**. If instead of passing
-    a `const char*` you pass a `fluent::container::external_string`, the
+    a `const char*` you pass a `zelix::container::external_string`, the
     library will not call `strlen()` and the parser is still zero-copy.
     **Example**:
     ```c++
