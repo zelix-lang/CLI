@@ -263,6 +263,7 @@ namespace zelix::cli
             return parsed_args;
         }
 
+        template <bool Unicode = true>
         [[nodiscard]] container::string help()
         {
             container::string msg;
@@ -354,7 +355,14 @@ namespace zelix::cli
                 }
 
                 msg.push(ANSI_GREEN, 5);
-                msg.push("⤷");
+                if constexpr (Unicode)
+                {
+                    msg.push("⤷");
+                }
+                else
+                {
+                    msg.push("->");
+                }
                 msg.push(" help: ", 7);
 
                 switch (global_error.error_type)
@@ -477,7 +485,14 @@ namespace zelix::cli
             {
                 msg.push(ANSI_BRIGHT_BLACK, 5);
                 msg.push("  ", 2);
-                msg.push("➤ ");
+                if constexpr (Unicode)
+                {
+                    msg.push("➤ ");
+                }
+                else
+                {
+                    msg.push("> ");
+                }
                 msg.push(ANSI_RESET, 4);
                 msg.push(ANSI_CYAN, 5);
                 msg.push(name.ptr(), name.size());
