@@ -57,95 +57,95 @@ namespace zelix::cli
     class args
     {
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             value,
-            container::external_string_hash
+            stl::external_string_hash
         > &commands;
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             value,
-            container::external_string_hash
+            stl::external_string_hash
         > &flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > &cmd_aliases;
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > &flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > &cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > &flag_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > str_args; ///< String arguments map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             int,
-            container::external_string_hash
+            stl::external_string_hash
         > int_args; ///< Integer arguments map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             float,
-            container::external_string_hash
+            stl::external_string_hash
         > float_args; ///< Float arguments map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             bool,
-            container::external_string_hash
+            stl::external_string_hash
         > bool_args; ///< Boolean arguments map
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > str_flags; ///< String flags map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             int,
-            container::external_string_hash
+            stl::external_string_hash
         > int_flags; ///< Integer flags map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             float,
-            container::external_string_hash
+            stl::external_string_hash
         > float_flags; ///< Float flags map
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             bool,
-            container::external_string_hash
+            stl::external_string_hash
         > bool_flags; ///< Boolean flags map
 
-        container::external_string cmd;
+        stl::external_string cmd;
 
         bool parse_flag(
-            container::external_string &flag,
+            stl::external_string &flag,
             bool &waiting_value,
             value::type &expected,
             const int i
@@ -182,11 +182,11 @@ namespace zelix::cli
 
         template <typename T, typename Flag>
         bool parse_value(
-            const container::external_string &value,
-            container::external_string &name
+            const stl::external_string &value,
+            stl::external_string &name
         )
         {
-            if constexpr (std::is_same_v<T, container::external_string>)
+            if constexpr (std::is_same_v<T, stl::external_string>)
             {
                 if constexpr (std::is_same_v<Flag, bool>)
                 {
@@ -295,10 +295,10 @@ namespace zelix::cli
         }
 
         template <typename T, typename Flag>
-        T val(const container::external_string &name)
+        T val(const stl::external_string &name)
         {
             if constexpr (
-                std::is_same_v<T, container::external_string>
+                std::is_same_v<T, stl::external_string>
                 || std::is_same_v<T, const char *>
             )
             {
@@ -423,42 +423,42 @@ namespace zelix::cli
     public:
         explicit args(
             ankerl::unordered_dense::map<
-                container::external_string,
+                stl::external_string,
                 value,
-                container::external_string_hash
+                stl::external_string_hash
             > &commands,
 
             ankerl::unordered_dense::map<
-                container::external_string,
+                stl::external_string,
                 value,
-                container::external_string_hash
+                stl::external_string_hash
             > &flags,
 
             // Aliases (cmd name -> alias)
             ankerl::unordered_dense::map<
-                container::external_string,
-                container::external_string,
-                container::external_string_hash
+                stl::external_string,
+                stl::external_string,
+                stl::external_string_hash
             > &cmd_aliases,
 
 
             ankerl::unordered_dense::map<
-                container::external_string,
-                container::external_string,
-                container::external_string_hash
+                stl::external_string,
+                stl::external_string,
+                stl::external_string_hash
             > &flag_aliases,
 
             // Aliases (alias -> cmd name)
             ankerl::unordered_dense::map<
-                container::external_string,
-                container::external_string,
-                container::external_string_hash
+                stl::external_string,
+                stl::external_string,
+                stl::external_string_hash
             > &cmd_aliases_reverse,
 
             ankerl::unordered_dense::map<
-                container::external_string,
-                container::external_string,
-                container::external_string_hash
+                stl::external_string,
+                stl::external_string,
+                stl::external_string_hash
             > &flag_aliases_reverse
         ) :
             commands(commands),
@@ -486,13 +486,13 @@ namespace zelix::cli
             bool value_command = false; ///< Whether the expected value is for a command
             bool has_command = false;
             value::type expected;
-            container::external_string flag;
+            stl::external_string flag;
             for (int i = 1; i < argc; ++i)
             {
                 const auto arg = argv[i];
                 if (waiting_value)
                 {
-                    auto val = container::external_string(arg);
+                    auto val = stl::external_string(arg);
                     bool parsing_success = false;
 
                     if (value_command)
@@ -531,7 +531,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<container::external_string, int>(
+                                parsing_success = parse_value<stl::external_string, int>(
                                     val,
                                     cmd
                                 );
@@ -576,7 +576,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<container::external_string, bool>(
+                                parsing_success = parse_value<stl::external_string, bool>(
                                     val,
                                     flag
                                 );
@@ -619,11 +619,11 @@ namespace zelix::cli
                             global_error.argv_pos = i;
                         }
 
-                        flag = container::external_string(arg + 2);
+                        flag = stl::external_string(arg + 2);
                     }
                     else
                     {
-                        flag = container::external_string(arg + 1);
+                        flag = stl::external_string(arg + 1);
                     }
 
                     // Check if we have a value
@@ -660,7 +660,7 @@ namespace zelix::cli
                             return false;
                         }
 
-                        auto val = container::external_string(value);
+                        auto val = stl::external_string(value);
                         waiting_value = false; // We are no longer waiting for a value
                         bool parsing_success = false;
 
@@ -699,7 +699,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<container::external_string, bool>(
+                                parsing_success = parse_value<stl::external_string, bool>(
                                     val,
                                     flag
                                 );
@@ -730,7 +730,7 @@ namespace zelix::cli
                 // Parse commands
                 if (!has_command)
                 {
-                    cmd = container::external_string(arg);
+                    cmd = stl::external_string(arg);
                     has_command = true;
 
                     // Handle aliases
@@ -799,11 +799,11 @@ namespace zelix::cli
                     {
                         if (value_command)
                         {
-                            str_args[cmd] = val.get<container::external_string>();
+                            str_args[cmd] = val.get<stl::external_string>();
                         }
                         else
                         {
-                            str_flags[flag] = val.get<container::external_string>();
+                            str_flags[flag] = val.get<stl::external_string>();
                         }
                     }
 
@@ -849,7 +849,7 @@ namespace zelix::cli
         }
 
         template <typename T>
-        T flag(const container::external_string &name)
+        T flag(const stl::external_string &name)
         {
             return val<T, bool>(name);
         }
@@ -857,11 +857,11 @@ namespace zelix::cli
         template <typename T>
         T flag(const char *name)
         {
-            return val<T, bool>(container::external_string(name));
+            return val<T, bool>(stl::external_string(name));
         }
 
         template <typename T>
-        T command(const container::external_string &name)
+        T command(const stl::external_string &name)
         {
             return val<T, int>(name);
         }
@@ -869,10 +869,10 @@ namespace zelix::cli
         template <typename T>
         T command(const char *name)
         {
-            return val<T, int>(container::external_string(name));
+            return val<T, int>(stl::external_string(name));
         }
 
-        container::external_string &get_cmd()
+        stl::external_string &get_cmd()
         {
             return this->cmd;
         }
