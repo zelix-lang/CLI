@@ -263,7 +263,7 @@ namespace zelix::cli
         [[nodiscard]] stl::string help()
         {
             stl::string msg;
-            msg.push(ANSI_BOLD_BRIGHT_BLUE, 7);
+            msg.push(ANSI_BOLD_BRIGHT_YELLOW, 7);
             msg.push(name_);
             msg.push(ANSI_RESET, 4);
             msg.push("\n", 1);
