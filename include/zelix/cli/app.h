@@ -49,49 +49,49 @@ namespace zelix::cli
         const char *desc_ = nullptr;
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             value,
-            container::external_string_hash
+            stl::external_string_hash
         > commands;
 
         ankerl::unordered_dense::map<
-            container::external_string,
+            stl::external_string,
             value,
-            container::external_string_hash
+            stl::external_string_hash
         > flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > cmd_aliases;
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            container::external_string,
-            container::external_string,
-            container::external_string_hash
+            stl::external_string,
+            stl::external_string,
+            stl::external_string_hash
         > flag_aliases_reverse;
 
         const int argc;
         const char **argv;
 
         void write_val_info(
-            container::string &msg,
-            const container::external_string &name,
+            stl::string &msg,
+            const stl::external_string &name,
             const value &val,
             const bool flag,
             const int alias_padding = 0
@@ -116,7 +116,7 @@ namespace zelix::cli
                 case value::STRING:
                 {
                     msg.push("[type=str, default=", 19);
-                    const auto str_val = val.get<container::external_string>();
+                    const auto str_val = val.get<stl::external_string>();
                     msg.push(str_val.ptr(), str_val.size());
                     break;
                 }
@@ -182,9 +182,9 @@ namespace zelix::cli
 
         template <typename T>
         void command(
-            const container::external_string &name,
-            const container::external_string &alias,
-            const container::external_string &description,
+            const stl::external_string &name,
+            const stl::external_string &alias,
+            const stl::external_string &description,
             const T &def
         )
         {
@@ -207,18 +207,18 @@ namespace zelix::cli
         )
         {
             command(
-                container::external_string(name, strlen(name)),
-                container::external_string(alias, strlen(alias)),
-                container::external_string(description, strlen(description)),
+                stl::external_string(name, strlen(name)),
+                stl::external_string(alias, strlen(alias)),
+                stl::external_string(description, strlen(description)),
                 value
             );
         }
 
         template <typename T>
         void flag(
-            const container::external_string &name,
-            const container::external_string &alias,
-            const container::external_string &description,
+            const stl::external_string &name,
+            const stl::external_string &alias,
+            const stl::external_string &description,
             const T &def
         )
         {
@@ -241,9 +241,9 @@ namespace zelix::cli
         )
         {
             flag(
-                container::external_string(name, strlen(name)),
-                container::external_string(alias, strlen(alias)),
-                container::external_string(description, strlen(description)),
+                stl::external_string(name, strlen(name)),
+                stl::external_string(alias, strlen(alias)),
+                stl::external_string(description, strlen(description)),
                 value
             );
         }
@@ -264,9 +264,9 @@ namespace zelix::cli
         }
 
         template <bool Unicode = true>
-        [[nodiscard]] container::string help()
+        [[nodiscard]] stl::string help()
         {
-            container::string msg;
+            stl::string msg;
             msg.push(ANSI_BOLD_BRIGHT_BLUE, 7);
             msg.push(name_);
             msg.push(ANSI_RESET, 4);
