@@ -28,6 +28,7 @@
 //
 
 #pragma once
+#include "zelix/container/external_string.h"
 
 namespace zelix::cli
 {
@@ -44,10 +45,10 @@ namespace zelix::cli
 
     private:
         type value_type = STRING; ///< Type of the value
-        container::external_string description; ///< Description of the value
+        stl::external_string description; ///< Description of the value
 
         // Default values
-        container::external_string default_str;
+        stl::external_string default_str;
         int default_int = 0;
         float default_float = 0.0f;
         bool default_bool = false;
@@ -65,16 +66,16 @@ namespace zelix::cli
         template <typename T>
         explicit value(
             const T default_value,
-            const container::external_string &description
+            const stl::external_string &description
         ) :
             description(description), default_str("", 1)
         {
             if (description.size() == 0)
             {
-                throw except::exception("Description cannot be empty");
+                throw stl::except::exception("Description cannot be empty");
             }
 
-            if constexpr (std::is_same_v<T, container::external_string>)
+            if constexpr (std::is_same_v<T, stl::external_string>)
             {
                 value_type = STRING;
                 default_str = default_value;
@@ -97,11 +98,11 @@ namespace zelix::cli
             else if constexpr (std::is_same_v<T, const char *>)
             {
                 value_type = STRING;
-                default_str = container::external_string(default_value);
+                default_str = stl::external_string(default_value);
             }
             else
             {
-                throw except::exception("Unsupported type for default value");
+                throw stl::except::exception("Unsupported type for default value");
             }
         }
 
@@ -110,7 +111,7 @@ namespace zelix::cli
             return value_type;
         }
 
-        [[nodiscard]] const container::external_string &get_description()
+        [[nodiscard]] const stl::external_string &get_description()
         const
         {
             return description;
@@ -119,7 +120,7 @@ namespace zelix::cli
         template <typename T>
         T get()
         const {
-            if constexpr (std::is_same_v<T, container::external_string>)
+            if constexpr (std::is_same_v<T, stl::external_string>)
             {
                 return default_str;
             }
@@ -137,7 +138,7 @@ namespace zelix::cli
             }
             else
             {
-                throw except::exception("Unsupported type for default value");
+                throw stl::except::exception("Unsupported type for default value");
             }
         }
     };
