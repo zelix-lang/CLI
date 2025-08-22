@@ -166,7 +166,7 @@ namespace zelix::cli
         {
             if (name == nullptr || description == nullptr)
             {
-                throw except::exception("Name and description cannot be null");
+                throw stl::except::exception("Name and description cannot be null");
             }
         }
 
@@ -190,7 +190,7 @@ namespace zelix::cli
         {
             if (commands.contains(name) || cmd_aliases_reverse.contains(alias))
             {
-                throw except::exception("Command already exists");
+                throw stl::except::exception("Command already exists");
             }
 
             cmd_aliases[name] = alias;
@@ -224,7 +224,7 @@ namespace zelix::cli
         {
             if (flags.contains(name) || flag_aliases_reverse.contains(alias))
             {
-                throw except::exception("Flag already exists");
+                throw stl::except::exception("Flag already exists");
             }
 
             flag_aliases[name] = alias;
