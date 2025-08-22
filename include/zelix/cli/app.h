@@ -30,16 +30,12 @@
 #pragma once
 
 #include <ankerl/unordered_dense.h>
-#include <fluent/ansi/ansi.h>
-
+#include "zelix/container/ansi.h"
 #include "args.h"
 #include "zelix/container/external_string.h"
 #include "zelix/container/owned_string.h"
 #include "zelix/except/exception.h"
 #include "value.h"
-#define ANSI_UNDERLINE "\033[4m"
-#define ANSI_DIM "\e[2m"
-#define ANSI_DIM_END "\e[22m"
 
 namespace zelix::cli
 {
