@@ -28,7 +28,7 @@
 //
 
 #pragma once
-#include "zelix/container/external_string.h"
+#include "zelix/external_string.h"
 
 namespace zelix::cli
 {

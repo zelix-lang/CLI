@@ -30,7 +30,7 @@
 #pragma once
 #include <charconv>
 #include "ankerl/unordered_dense.h"
-#include "zelix/container/external_string.h"
+#include "zelix/external_string.h"
 #include "value.h"
 
 namespace zelix::cli
