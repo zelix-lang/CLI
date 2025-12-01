@@ -9,7 +9,8 @@ while staying highly performant.
 
 - Default values for flags and commands.
 - Automatic help generation **(With colors!)**
-- Uses Zelix STL instead of the standard library.
+- Uses [Celery](https://github.com/rodrigoo-r/Celery)
+instead of the standard library.
 - Mostly zero-copy parsing.
 - Easy-to-use API.
 - Built with performance in mind.
