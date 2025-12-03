@@ -28,7 +28,7 @@
 //
 
 #pragma once
-#include "zelix/external_string.h"
+#include "celery/string/external.h"
 
 namespace zelix::cli
 {
@@ -45,10 +45,10 @@ namespace zelix::cli
 
     private:
         type value_type = STRING; ///< Type of the value
-        stl::external_string description; ///< Description of the value
+        Celery::Str::External description; ///< Description of the value
 
         // Default values
-        stl::external_string default_str;
+        Celery::Str::External default_str;
         int default_int = 0;
         float default_float = 0.0f;
         bool default_bool = false;
@@ -66,16 +66,16 @@ namespace zelix::cli
         template <typename T>
         explicit value(
             const T default_value,
-            const stl::external_string &description
+            const Celery::Str::External &description
         ) :
             description(description), default_str("", 1)
         {
-            if (description.size() == 0)
+            if (description.Size() == 0)
             {
-                throw stl::except::exception("Description cannot be empty");
+                throw Celery::Except::OutOfRange();
             }
 
-            if constexpr (std::is_same_v<T, stl::external_string>)
+            if constexpr (std::is_same_v<T, Celery::Str::External>)
             {
                 value_type = STRING;
                 default_str = default_value;
@@ -98,11 +98,11 @@ namespace zelix::cli
             else if constexpr (std::is_same_v<T, const char *>)
             {
                 value_type = STRING;
-                default_str = stl::external_string(default_value);
+                default_str = Celery::Str::External(default_value);
             }
             else
             {
-                throw stl::except::exception("Unsupported type for default value");
+                throw Celery::Except::OutOfRange();
             }
         }
 
@@ -111,7 +111,7 @@ namespace zelix::cli
             return value_type;
         }
 
-        [[nodiscard]] const stl::external_string &get_description()
+        [[nodiscard]] const Celery::Str::External &get_description()
         const
         {
             return description;
@@ -120,7 +120,7 @@ namespace zelix::cli
         template <typename T>
         T get()
         const {
-            if constexpr (std::is_same_v<T, stl::external_string>)
+            if constexpr (std::is_same_v<T, Celery::Str::External>)
             {
                 return default_str;
             }
@@ -138,7 +138,7 @@ namespace zelix::cli
             }
             else
             {
-                throw stl::except::exception("Unsupported type for default value");
+                throw Celery::Except::OutOfRange();
             }
         }
     };
