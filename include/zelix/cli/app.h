@@ -30,11 +30,11 @@
 #pragma once
 
 #include <ankerl/unordered_dense.h>
-#include "zelix/ansi.h"
+#include "celery/misc/ansi.h"
 #include "args.h"
-#include "zelix/external_string.h"
-#include "zelix/owned_string.h"
-#include "zelix/except/exception.h"
+#include "celery/string/external.h"
+#include "celery/string/string.h"
+#include "celery/except/base.h"
 #include "value.h"
 
 namespace zelix::cli
@@ -45,40 +45,40 @@ namespace zelix::cli
         const char *desc_ = nullptr;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             value,
             stl::external_string_hash
         > commands;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             value,
             stl::external_string_hash
         > flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
+            Celery::Str::External,
+            Celery::Str::External,
             stl::external_string_hash
         > cmd_aliases;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
+            Celery::Str::External,
+            Celery::Str::External,
             stl::external_string_hash
         > flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
+            Celery::Str::External,
+            Celery::Str::External,
             stl::external_string_hash
         > cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
+            Celery::Str::External,
+            Celery::Str::External,
             stl::external_string_hash
         > flag_aliases_reverse;
 
@@ -96,8 +96,8 @@ namespace zelix::cli
             const auto &desc = val.get_description();
             const auto &alias = flag ? flag_aliases[name] : cmd_aliases[name];
 
-            msg.push(ANSI_RESET, 4);
-            msg.push(ANSI_BRIGHT_BLACK, 5);
+            msg.push(Celery::Misc::Ansi::Reset, 4);
+            msg.push(Celery::Misc::Ansi::Bright::Black, 5);
             msg.push(" ~ ", 3);
             msg.push(desc.ptr(), desc.size());
             msg.push("\n   ", 4);
