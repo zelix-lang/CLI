@@ -1,10 +1,10 @@
 include(FetchContent)
 cmake_minimum_required(VERSION 3.14)
-project(ZelixCLI)
+project(ZelixCLI C CXX)
 
 FetchContent_Declare(
-        zelix_stl
-        GIT_REPOSITORY https://github.com/zelix-lang/STL.git
+        Celery
+        GIT_REPOSITORY https://github.com/rodrigoo-r/Celery
         GIT_TAG        master
 )
 
@@ -14,7 +14,7 @@ FetchContent_Declare(
         GIT_TAG        main
 )
 
-FetchContent_MakeAvailable(zelix_stl)
+FetchContent_MakeAvailable(Celery)
 FetchContent_MakeAvailable(unordered_dense)
 set(CMAKE_CXX_STANDARD 20)
 
@@ -27,6 +27,6 @@ target_include_directories(
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(ZelixCLI INTERFACE zelix::stl)
+target_link_libraries(ZelixCLI INTERFACE Celery::Celery)
 target_link_libraries(ZelixCLI INTERFACE unordered_dense)
 target_include_directories(ZelixCLI INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/extras)
