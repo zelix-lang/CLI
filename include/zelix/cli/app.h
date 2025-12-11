@@ -31,6 +31,7 @@
 
 #include <ankerl/unordered_dense.h>
 #include "celery/misc/ansi.h"
+#include "celery/misc/hash.h"
 #include "args.h"
 #include "celery/string/external.h"
 #include "celery/string/string.h"
@@ -47,47 +48,47 @@ namespace zelix::cli
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > commands;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > cmd_aliases;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > flag_aliases_reverse;
 
         const int argc;
         const char **argv;
 
         void write_val_info(
-            stl::string &msg,
-            const stl::external_string &name,
+            Celery::Str::String &msg,
+            const Celery::Str::External &name,
             const value &val,
             const bool flag,
             const int alias_padding = 0
@@ -96,37 +97,37 @@ namespace zelix::cli
             const auto &desc = val.get_description();
             const auto &alias = flag ? flag_aliases[name] : cmd_aliases[name];
 
-            msg.push(Celery::Misc::Ansi::Reset, 4);
-            msg.push(Celery::Misc::Ansi::Bright::Black, 5);
-            msg.push(" ~ ", 3);
-            msg.push(desc.ptr(), desc.size());
-            msg.push("\n   ", 4);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(Celery::Misc::Ansi::Bright::Black, 5);
+            msg.Write(" ~ ", 3);
+            msg.Write(desc.Ptr(), desc.Size());
+            msg.Write("\n   ", 4);
 
-            for (size_t i = 0; i < name.size() + 6 + alias_padding + alias.size(); ++i)
+            for (size_t i = 0; i < name.Size() + 6 + alias_padding + alias.Size(); ++i)
             {
-                msg.push(' ');
+                msg.Write(' ');
             }
 
             switch (val.get_type())
             {
                 case value::STRING:
                 {
-                    msg.push("[type=str, default=", 19);
-                    const auto str_val = val.get<stl::external_string>();
-                    msg.push(str_val.ptr(), str_val.size());
+                    msg.Write("[type=str, default=", 19);
+                    const auto str_val = val.get<Celery::Str::External>();
+                    msg.Write(str_val.Ptr(), str_val.Size());
                     break;
                 }
 
                 case value::BOOL:
                 {
-                    msg.push("[type=bool, default=", 20);
+                    msg.Write("[type=bool, default=", 20);
                     if (val.get<bool>())
                     {
-                        msg.push("true", 4);
+                        msg.Write("true", 4);
                     }
                     else
                     {
-                        msg.push("false", 5);
+                        msg.Write("false", 5);
                     }
 
                     break;
@@ -134,22 +135,24 @@ namespace zelix::cli
 
                 case value::FLOAT:
                 {
-                    msg.push("[type=float, default=", 21);
+                    msg.Write("[type=float, default=", 21);
                     const std::string float_str = std::to_string(val.get<float>());
-                    msg.push(float_str.c_str(), float_str.size());
+                    msg.Write(float_str.c_str(), float_str.size());
                     break;
                 }
 
                 case value::INTEGER:
                 {
-                    msg.push("[type=int, default=", 19);
+                    msg.Write("[type=int, default=", 19);
                     const std::string int_str = std::to_string(val.get<int>());
-                    msg.push(int_str.c_str(), int_str.size());
+                    msg.Write(int_str.c_str(), int_str.size());
                     break;
                 }
             }
 
-            msg.push("]" ANSI_RESET "\n", 6);
+            msg.Write(']');
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write('\n');
         }
     public:
         explicit app(
@@ -162,7 +165,7 @@ namespace zelix::cli
         {
             if (name == nullptr || description == nullptr)
             {
-                throw stl::except::exception("Name and description cannot be null");
+                throw Celery::Except::Exception("Name and description cannot be null");
             }
         }
 
@@ -178,15 +181,15 @@ namespace zelix::cli
 
         template <typename T>
         void command(
-            const stl::external_string &name,
-            const stl::external_string &alias,
-            const stl::external_string &description,
+            const Celery::Str::External &name,
+            const Celery::Str::External &alias,
+            const Celery::Str::External &description,
             const T &def
         )
         {
             if (commands.contains(name) || cmd_aliases_reverse.contains(alias))
             {
-                throw stl::except::exception("Command already exists");
+                throw Celery::Except::Exception("Command already exists");
             }
 
             cmd_aliases[name] = alias;
@@ -203,24 +206,24 @@ namespace zelix::cli
         )
         {
             command(
-                stl::external_string(name, strlen(name)),
-                stl::external_string(alias, strlen(alias)),
-                stl::external_string(description, strlen(description)),
+                Celery::Str::External(name, strlen(name)),
+                Celery::Str::External(alias, strlen(alias)),
+                Celery::Str::External(description, strlen(description)),
                 value
             );
         }
 
         template <typename T>
         void flag(
-            const stl::external_string &name,
-            const stl::external_string &alias,
-            const stl::external_string &description,
+            const Celery::Str::External &name,
+            const Celery::Str::External &alias,
+            const Celery::Str::External &description,
             const T &def
         )
         {
             if (flags.contains(name) || flag_aliases_reverse.contains(alias))
             {
-                throw stl::except::exception("Flag already exists");
+                throw Celery::Except::Exception("Flag already exists");
             }
 
             flag_aliases[name] = alias;
@@ -237,9 +240,9 @@ namespace zelix::cli
         )
         {
             flag(
-                stl::external_string(name, strlen(name)),
-                stl::external_string(alias, strlen(alias)),
-                stl::external_string(description, strlen(description)),
+                Celery::Str::External(name, strlen(name)),
+                Celery::Str::External(alias, strlen(alias)),
+                Celery::Str::External(description, strlen(description)),
                 value
             );
         }
@@ -260,243 +263,229 @@ namespace zelix::cli
         }
 
         template <bool Unicode = true>
-        [[nodiscard]] stl::string help()
+        [[nodiscard]] Celery::Str::String help()
         {
-            stl::string msg;
-            msg.push(ANSI_BOLD_BRIGHT_YELLOW, 7);
-            msg.push(name_);
-            msg.push(ANSI_RESET, 4);
-            msg.push("\n", 1);
-            msg.push(ANSI_BRIGHT_BLACK, 5);
-            msg.push(desc_);
-            msg.push(ANSI_RESET, 4);
-            msg.push("\n\n", 2);
+            Celery::Str::String msg;
+            msg.Write(Celery::Misc::Ansi::Bold::Bright::Yellow, 7);
+            msg.Write(name_);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write("\n", 1);
+            msg.Write(Celery::Misc::Ansi::Bright::Black, 5);
+            msg.Write(desc_);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write("\n\n", 2);
 
             const size_t bin_len = strlen(argv[0]) - 1;
             if (global_error.error_type != error::UNKNOWN)
             {
-                msg.push(ANSI_BOLD_BRIGHT_RED, 7);
-                msg.push("Error: ", 7);
-                msg.push(ANSI_RESET, 4);
-                msg.push(ANSI_BRIGHT_RED, 5);
+                msg.Write(Celery::Misc::Ansi::Bold::Bright::Red, 7);
+                msg.Write("Error: ", 7);
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
+                msg.Write(Celery::Misc::Ansi::Bright::Red, 5);
 
                 switch (global_error.error_type)
                 {
                     case error::EXPECTED_VALUE:
-                        msg.push("Expected a value", 16);
+                        msg.Write("Expected a value", 16);
                         break;
 
                     case error::NOT_EXPECTED_VALUE:
-                        msg.push("Unexpected value", 16);
+                        msg.Write("Unexpected value", 16);
                         break;
 
                     case error::TYPE_MISMATCH:
-                        msg.push("Type mismatch", 13);
+                        msg.Write("Type mismatch", 13);
                         break;
 
                     case error::UNKNOWN_COMMAND:
-                        msg.push("Unknown command", 15);
+                        msg.Write("Unknown command", 15);
                         break;
 
                     case error::UNKNOWN_FLAG:
-                        msg.push("Unknown flag", 12);
+                        msg.Write("Unknown flag", 12);
                         break;
 
                     default:
                         break;
                 }
 
-                msg.push("\n  ", 3);
-                msg.push(ANSI_RESET, 4);
-                msg.push(ANSI_BRIGHT_BLACK, 5);
-                msg.push("➤ ");
-                msg.push(ANSI_RESET, 4);
+                msg.Write("\n  ", 3);
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
+                msg.Write(Celery::Misc::Ansi::Bright::Black, 5);
+                msg.Write("➤ ");
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
 
                 const bool error_first = global_error.argv_pos == 0;
                 if (error_first)
                 {
-                    msg.push(ANSI_BRIGHT_RED, 5);
-                    msg.push(ANSI_UNDERLINE, 4);
+                    msg.Write(Celery::Misc::Ansi::Bright::Red, 5);
+                    msg.Write("\u001B[4m", 4);
                 }
                 else
                 {
-                    msg.push(ANSI_BOLD_BRIGHT_BLUE, 7);
+                    msg.Write(Celery::Misc::Ansi::Bold::Bright::Blue, 7);
                 }
 
-                msg.push(argv[0], bin_len + 1);
+                msg.Write(argv[0], bin_len + 1);
 
                 if (!error_first || argc > 1)
                 {
-                    msg.push(ANSI_RESET, 4);
-                    msg.push(ANSI_BRIGHT_BLACK, 5);
-                    msg.push(" ... ");
-                    msg.push(ANSI_RESET, 4);
+                    msg.Write(Celery::Misc::Ansi::Reset, 4);
+                    msg.Write(Celery::Misc::Ansi::Black, 5);
+                    msg.Write(" ... ", 5);
+                    msg.Write(Celery::Misc::Ansi::Reset, 4);
                 }
 
                 if (!error_first)
                 {
-                    msg.push(ANSI_BRIGHT_RED, 5);
-                    msg.push(ANSI_UNDERLINE, 4);
-                    msg.push(argv[global_error.argv_pos]);
-                    msg.push(ANSI_RESET "\n         ", 14);
+                    msg.Write(Celery::Misc::Ansi::Bright::Red, 5);
+                    msg.Write("\u001B[4m", 4);
+                    msg.Write(argv[global_error.argv_pos]);
+                    msg.Write(Celery::Misc::Ansi::Reset, 4);
+                    msg.Write( "\n         ", 10);
 
                     for (size_t i = 0; i < bin_len + 1; ++i)
                     {
-                        msg.push(' ');
+                        msg.Write(' ');
                     }
                 }
                 else
                 {
-                    msg.push(ANSI_RESET "\n    ", 9);
+                    msg.Write(Celery::Misc::Ansi::Reset, 4);
+                    msg.Write("\n    ", 5);
                 }
 
-                msg.push(ANSI_GREEN, 5);
+                msg.Write(Celery::Misc::Ansi::Green, 5);
                 if constexpr (Unicode)
                 {
-                    msg.push("⤷");
+                    msg.Write("⤷");
                 }
                 else
                 {
-                    msg.push("->");
+                    msg.Write("->");
                 }
-                msg.push(" help: ", 7);
+                msg.Write(" help: ", 7);
 
                 switch (global_error.error_type)
                 {
                     case error::EXPECTED_VALUE:
-                        msg.push("add a value after this", 22);
+                        msg.Write("add a value after this", 22);
                         break;
 
                     case error::NOT_EXPECTED_VALUE:
-                        msg.push("remove this", 11);
+                        msg.Write("remove this", 11);
                         break;
 
                     case error::TYPE_MISMATCH:
-                        msg.push("change the value to match the expected type", 43);
+                        msg.Write("change the value to match the expected type", 43);
                         break;
 
                     case error::UNKNOWN_COMMAND:
-                        msg.push("use --help to see a list of commands", 36);
+                        msg.Write("use --help to see a list of commands", 36);
                         break;
 
                     case error::UNKNOWN_FLAG:
-                        msg.push("use --help to see a list of flags", 33);
+                        msg.Write("use --help to see a list of flags", 33);
                         break;
 
                     default:
                         break;
                 }
 
-                msg.push(ANSI_RESET, 4);
-                msg.push(ANSI_RESET, 4);
-                msg.push("\n\n", 2);
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
+                msg.Write("\n\n", 2);
             }
 
-            msg.push(
-                ANSI_BRIGHT_YELLOW
-                "Usage:\n"
-                ANSI_RESET
-                ANSI_BOLD_BRIGHT_BLUE,
-                23
+            msg.Write(Celery::Misc::Ansi::Bright::Yellow, 5);
+            msg.Write(
+                "Usage:\n",
+                7
             );
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(Celery::Misc::Ansi::Bold::Bright::Blue, 7);
 
-            msg.push(argv[0], bin_len + 1);
+            msg.Write(argv[0], bin_len + 1);
+            msg.Write(' ');
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write("\u001B[4m", 4);
+            msg.Write(Celery::Misc::Ansi::Bright::Magenta, 5);
+            msg.Write("[--flags]", 9);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(' ');
+            msg.Write("\u001B[4m", 4);
+            msg.Write(Celery::Misc::Ansi::Bright::Green, 5);
+            msg.Write("<command>", 9);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(' ');
+            msg.Write(Celery::Misc::Ansi::Bright::Yellow, 5);
+            msg.Write("\u001B[4m", 4);
+            msg.Write("[<args>]", 7);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(' ');
+            msg.Write("\u001B[4m", 4);
+            msg.Write(Celery::Misc::Ansi::Bright::Magenta, 5);
+            msg.Write("[--flags]", 9);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write("\n", 1);
 
-            msg.push(
-                " "
-                ANSI_RESET
-                ANSI_UNDERLINE
-                ANSI_BRIGHT_PURPLE
-                "[--flags]"
-                ANSI_RESET
-                " "
-                ANSI_UNDERLINE
-                ANSI_BRIGHT_GREEN
-                "<command>"
-                ANSI_RESET
-                " "
-                ANSI_YELLOW
-                ANSI_UNDERLINE
-                "[<args>]"
-                ANSI_RESET
-                " "
-                ANSI_UNDERLINE
-                ANSI_BRIGHT_PURPLE
-                "[--flags]"
-                ANSI_RESET
-                "\n",
-                96
-            );
-
-            msg.push(ANSI_DIM, 4);
-            msg.push(ANSI_BRIGHT_BLACK, 5);
+            // msg.Write(ANSI_DIM, 4);
+            msg.Write("\x1b[2m", 4);
+            msg.Write(Celery::Misc::Ansi::Bright::Black, 5);
 
             for (size_t i = 0; i < bin_len; ++i)
             {
-                msg.push('-');
+                msg.Write('-');
             }
 
-            msg.push('>');
-            msg.push(ANSI_DIM_END, 5);
-            msg.push(ANSI_RESET, 4);
+            msg.Write('>');
+            msg.Write(' ');
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
 
-            msg.push(
-                " "
-                ANSI_DIM
-                ANSI_BRIGHT_PURPLE
-                "optional"
-                ANSI_DIM_END
-                ANSI_RESET
-                ANSI_DIM
-                ANSI_BRIGHT_GREEN
-                "  required"
-                ANSI_DIM_END
-                ANSI_RESET
-                ANSI_DIM
-                ANSI_YELLOW
-                "  optional"
-                ANSI_DIM_END
-                ANSI_RESET
-                " "
-                ANSI_DIM
-                ANSI_BRIGHT_PURPLE
-                "optional"
-                ANSI_DIM_END
-                ANSI_RESET
-                "\n\n",
-                112
-            );
+            msg.Write(Celery::Misc::Ansi::Dim::Magenta, 7);
+            msg.Write("optional", 8);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(Celery::Misc::Ansi::Dim::Green, 7);
+            msg.Write("  required", 10);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(Celery::Misc::Ansi::Dim::Yellow, 7);
+            msg.Write("  optional", 10);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write(' ');
+            msg.Write(Celery::Misc::Ansi::Dim::Magenta, 7);
+            msg.Write("optional", 8);
+            msg.Write(Celery::Misc::Ansi::Reset, 4);
+            msg.Write("\n\n", 2);
 
             if (!commands.empty())
             {
-                msg.push(
-                    ANSI_YELLOW
-                    "Available commands:\n"
-                    ANSI_RESET,
-                    29
+                msg.Write(Celery::Misc::Ansi::Yellow, 5);
+                msg.Write(
+                    "Available commands:\n",
+                    20
                 );
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
             }
 
             for (const auto &[name, val] : commands)
             {
-                msg.push(ANSI_BRIGHT_BLACK, 5);
-                msg.push("  ", 2);
+                msg.Write(Celery::Misc::Ansi::Bright::Black, 5);
+                msg.Write("  ", 2);
                 if constexpr (Unicode)
                 {
-                    msg.push("➤ ");
+                    msg.Write("➤ ");
                 }
                 else
                 {
-                    msg.push("> ");
+                    msg.Write("> ", 2);
                 }
-                msg.push(ANSI_RESET, 4);
-                msg.push(ANSI_CYAN, 5);
-                msg.push(name.ptr(), name.size());
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
+                msg.Write(Celery::Misc::Ansi::Cyan, 5);
+                msg.Write(name.Ptr(), name.Size());
 
                 // Honor aliases
                 const auto &alias = cmd_aliases[name];
-                msg.push(", ", 2);
-                msg.push(alias.ptr(), alias.size());
+                msg.Write(", ", 2);
+                msg.Write(alias.Ptr(), alias.Size());
 
                 // Write the value's info
                 write_val_info(msg, name, val, false);
@@ -504,25 +493,25 @@ namespace zelix::cli
 
             if (!flags.empty())
             {
-                msg.push(
-                    ANSI_YELLOW
-                    "Available flags:\n"
-                    ANSI_RESET,
-                    26
+                msg.Write(Celery::Misc::Ansi::Yellow, 5);
+                msg.Write(
+                    "Available flags:\n",
+                    17
                 );
+                msg.Write(Celery::Misc::Ansi::Reset, 4);
             }
 
             for (auto &[name, val] : flags)
             {
-                msg.push("  ", 2);
-                msg.push(ANSI_BRIGHT_BLUE, 5);
-                msg.push("--", 2);
-                msg.push(name.ptr(), name.size());
+                msg.Write("  ", 2);
+                msg.Write(Celery::Misc::Ansi::Bright::Blue, 5);
+                msg.Write("--", 2);
+                msg.Write(name.Ptr(), name.Size());
 
                 // Honor aliases
                 const auto &alias = flag_aliases[name];
-                msg.push(", -", 3);
-                msg.push(alias.ptr(), alias.size());
+                msg.Write(", -", 3);
+                msg.Write(alias.Ptr(), alias.Size());
 
                 write_val_info(msg, name, val, true, 1);
             }
