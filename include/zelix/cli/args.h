@@ -30,7 +30,8 @@
 #pragma once
 #include <charconv>
 #include "ankerl/unordered_dense.h"
-#include "zelix/external_string.h"
+#include "celery/string/external.h"
+#include "celery/misc/hash.h"
 #include "value.h"
 
 namespace zelix::cli
@@ -57,95 +58,95 @@ namespace zelix::cli
     class args
     {
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             value,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > &commands;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             value,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > &flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > &cmd_aliases;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > &flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > &cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > &flag_aliases_reverse;
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > str_args; ///< String arguments map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             int,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > int_args; ///< Integer arguments map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             float,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > float_args; ///< Float arguments map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             bool,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > bool_args; ///< Boolean arguments map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
-            stl::external_string,
-            stl::external_string_hash
+            Celery::Str::External,
+            Celery::Str::External,
+            Celery::Misc::Hash
         > str_flags; ///< String flags map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             int,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > int_flags; ///< Integer flags map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             float,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > float_flags; ///< Float flags map
 
         ankerl::unordered_dense::map<
-            stl::external_string,
+            Celery::Str::External,
             bool,
-            stl::external_string_hash
+            Celery::Misc::Hash
         > bool_flags; ///< Boolean flags map
 
-        stl::external_string cmd;
+        Celery::Str::External cmd;
 
         bool parse_flag(
-            stl::external_string &flag,
+            Celery::Str::External &flag,
             bool &waiting_value,
             value::type &expected,
             const int i
@@ -182,11 +183,11 @@ namespace zelix::cli
 
         template <typename T, typename Flag>
         bool parse_value(
-            const stl::external_string &value,
-            stl::external_string &name
+            const Celery::Str::External &value,
+            Celery::Str::External &name
         )
         {
-            if constexpr (std::is_same_v<T, stl::external_string>)
+            if constexpr (std::is_same_v<T, Celery::Str::External>)
             {
                 if constexpr (std::is_same_v<Flag, bool>)
                 {
@@ -203,13 +204,13 @@ namespace zelix::cli
             {
                 if constexpr (std::is_same_v<Flag, bool>)
                 {
-                    if (memcmp(value.ptr(), "true", value.size()) == 0)
+                    if (memcmp(value.Ptr(), "true", value.Size()) == 0)
                     {
                         bool_flags[name] = true;
                         return true;
                     }
 
-                    if (memcmp(value.ptr(), "false", value.size()) == 0)
+                    if (memcmp(value.Ptr(), "false", value.Size()) == 0)
                     {
                         bool_flags[name] = false;
                         return true;
@@ -217,13 +218,13 @@ namespace zelix::cli
                 }
                 else
                 {
-                    if (memcmp(value.ptr(), "true", value.size()) == 0)
+                    if (memcmp(value.Ptr(), "true", value.Size()) == 0)
                     {
                         bool_args[name] = true;
                         return true;
                     }
 
-                    if (memcmp(value.ptr(), "false", value.size()) == 0)
+                    if (memcmp(value.Ptr(), "false", value.Size()) == 0)
                     {
                         bool_args[name] = false;
                         return true;
@@ -235,10 +236,10 @@ namespace zelix::cli
             else if constexpr (std::is_same_v<T, int>)
             {
                 int result = 0;
-                const auto value_ptr = value.ptr();
+                const auto value_ptr = value.Ptr();
 
                 // Iterate over the ptr
-                for (size_t i = 0; i < value.size(); ++i)
+                for (size_t i = 0; i < value.Size(); ++i)
                 {
                     const char c = value_ptr[i];
                     if (c < '0' || c > '9')
@@ -263,10 +264,10 @@ namespace zelix::cli
             else if constexpr (std::is_same_v<T, float>)
             {
                 float result = 0.0f;
-                const auto value_ptr = value.ptr();
+                const auto value_ptr = value.Ptr();
 
                 if (
-                    auto [ptr, ec] = std::from_chars(value_ptr, value_ptr + value.size(), result);
+                    auto [ptr, ec] = std::from_chars(value_ptr, value_ptr + value.Size(), result);
                     ec != std::errc()
                 ) {
                     return false; // Invalid float value
@@ -295,10 +296,10 @@ namespace zelix::cli
         }
 
         template <typename T, typename Flag>
-        T val(const stl::external_string &name)
+        T val(const Celery::Str::External &name)
         {
             if constexpr (
-                std::is_same_v<T, stl::external_string>
+                std::is_same_v<T, Celery::Str::External>
                 || std::is_same_v<T, const char *>
             )
             {
@@ -423,42 +424,42 @@ namespace zelix::cli
     public:
         explicit args(
             ankerl::unordered_dense::map<
-                stl::external_string,
+                Celery::Str::External,
                 value,
-                stl::external_string_hash
+                Celery::Misc::Hash
             > &commands,
 
             ankerl::unordered_dense::map<
-                stl::external_string,
+                Celery::Str::External,
                 value,
-                stl::external_string_hash
+                Celery::Misc::Hash
             > &flags,
 
             // Aliases (cmd name -> alias)
             ankerl::unordered_dense::map<
-                stl::external_string,
-                stl::external_string,
-                stl::external_string_hash
+                Celery::Str::External,
+                Celery::Str::External,
+                Celery::Misc::Hash
             > &cmd_aliases,
 
 
             ankerl::unordered_dense::map<
-                stl::external_string,
-                stl::external_string,
-                stl::external_string_hash
+                Celery::Str::External,
+                Celery::Str::External,
+                Celery::Misc::Hash
             > &flag_aliases,
 
             // Aliases (alias -> cmd name)
             ankerl::unordered_dense::map<
-                stl::external_string,
-                stl::external_string,
-                stl::external_string_hash
+                Celery::Str::External,
+                Celery::Str::External,
+                Celery::Misc::Hash
             > &cmd_aliases_reverse,
 
             ankerl::unordered_dense::map<
-                stl::external_string,
-                stl::external_string,
-                stl::external_string_hash
+                Celery::Str::External,
+                Celery::Str::External,
+                Celery::Misc::Hash
             > &flag_aliases_reverse
         ) :
             commands(commands),
@@ -486,13 +487,13 @@ namespace zelix::cli
             bool value_command = false; ///< Whether the expected value is for a command
             bool has_command = false;
             value::type expected;
-            stl::external_string flag;
+            Celery::Str::External flag("", 0);
             for (int i = 1; i < argc; ++i)
             {
                 const auto arg = argv[i];
                 if (waiting_value)
                 {
-                    auto val = stl::external_string(arg);
+                    auto val = Celery::Str::External(arg);
                     bool parsing_success = false;
 
                     if (value_command)
@@ -531,7 +532,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<stl::external_string, int>(
+                                parsing_success = parse_value<Celery::Str::External, int>(
                                     val,
                                     cmd
                                 );
@@ -576,7 +577,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<stl::external_string, bool>(
+                                parsing_success = parse_value<Celery::Str::External, bool>(
                                     val,
                                     flag
                                 );
@@ -619,25 +620,25 @@ namespace zelix::cli
                             global_error.argv_pos = i;
                         }
 
-                        flag = stl::external_string(arg + 2);
+                        flag = Celery::Str::External(arg + 2);
                     }
                     else
                     {
-                        flag = stl::external_string(arg + 1);
+                        flag = Celery::Str::External(arg + 1);
                     }
 
                     // Check if we have a value
-                    const auto flag_ptr = flag.ptr();
+                    const auto flag_ptr = flag.Ptr();
                     if (
                         const auto equals = strchr(flag_ptr, '=');
                         equals != nullptr
                     )
                     {
                         // Find the position of the equals sign
-                        const size_t equals_pos = equals - flag.ptr();
+                        const size_t equals_pos = equals - flag.Ptr();
                         const auto value = flag_ptr + equals_pos + 1; // Skip the equals sign
 
-                        flag.set_size(equals_pos); // Exclude the equals sign
+                        flag = Celery::Str::External(flag.Ptr(), equals_pos); // Exclude the equals sign
 
                         if (!parse_flag(flag, waiting_value, expected, i))
                         {
@@ -660,7 +661,7 @@ namespace zelix::cli
                             return false;
                         }
 
-                        auto val = stl::external_string(value);
+                        auto val = Celery::Str::External(value);
                         waiting_value = false; // We are no longer waiting for a value
                         bool parsing_success = false;
 
@@ -699,7 +700,7 @@ namespace zelix::cli
 
                             case value::STRING:
                             {
-                                parsing_success = parse_value<stl::external_string, bool>(
+                                parsing_success = parse_value<Celery::Str::External, bool>(
                                     val,
                                     flag
                                 );
@@ -730,7 +731,7 @@ namespace zelix::cli
                 // Parse commands
                 if (!has_command)
                 {
-                    cmd = stl::external_string(arg);
+                    cmd = Celery::Str::External(arg);
                     has_command = true;
 
                     // Handle aliases
@@ -799,11 +800,11 @@ namespace zelix::cli
                     {
                         if (value_command)
                         {
-                            str_args[cmd] = val.get<stl::external_string>();
+                            str_args[cmd] = val.get<Celery::Str::External>();
                         }
                         else
                         {
-                            str_flags[flag] = val.get<stl::external_string>();
+                            str_flags[flag] = val.get<Celery::Str::External>();
                         }
                     }
 
@@ -849,7 +850,7 @@ namespace zelix::cli
         }
 
         template <typename T>
-        T flag(const stl::external_string &name)
+        T flag(const Celery::Str::External &name)
         {
             return val<T, bool>(name);
         }
@@ -857,11 +858,11 @@ namespace zelix::cli
         template <typename T>
         T flag(const char *name)
         {
-            return val<T, bool>(stl::external_string(name));
+            return val<T, bool>(Celery::Str::External(name));
         }
 
         template <typename T>
-        T command(const stl::external_string &name)
+        T command(const Celery::Str::External &name)
         {
             return val<T, int>(name);
         }
@@ -869,10 +870,10 @@ namespace zelix::cli
         template <typename T>
         T command(const char *name)
         {
-            return val<T, int>(stl::external_string(name));
+            return val<T, int>(Celery::Str::External(name));
         }
 
-        stl::external_string &get_cmd()
+        Celery::Str::External &get_cmd()
         {
             return this->cmd;
         }
