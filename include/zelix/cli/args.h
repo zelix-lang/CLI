@@ -33,6 +33,7 @@
 #include "celery/string/external.h"
 #include "celery/misc/hash.h"
 #include "value.h"
+#include <celery/misc/string_equal.h>
 
 namespace zelix::cli
 {
@@ -60,87 +61,101 @@ namespace zelix::cli
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &commands;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &cmd_aliases;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > &flag_aliases_reverse;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > str_args; ///< String arguments map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             int,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > int_args; ///< Integer arguments map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             float,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > float_args; ///< Float arguments map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             bool,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > bool_args; ///< Boolean arguments map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > str_flags; ///< String flags map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             int,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > int_flags; ///< Integer flags map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             float,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > float_flags; ///< Float flags map
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             bool,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > bool_flags; ///< Boolean flags map
 
         Celery::Str::External cmd;
@@ -426,40 +441,46 @@ namespace zelix::cli
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 value,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+			    Celery::Misc::StringEquality
             > &commands,
 
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 value,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+	    		Celery::Misc::StringEquality
             > &flags,
 
             // Aliases (cmd name -> alias)
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 Celery::Str::External,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+			    Celery::Misc::StringEquality
             > &cmd_aliases,
 
 
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 Celery::Str::External,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+			    Celery::Misc::StringEquality
             > &flag_aliases,
 
             // Aliases (alias -> cmd name)
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 Celery::Str::External,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+			    Celery::Misc::StringEquality
             > &cmd_aliases_reverse,
 
             ankerl::unordered_dense::map<
                 Celery::Str::External,
                 Celery::Str::External,
-                Celery::Misc::Hash
+                Celery::Misc::Hash,
+			    Celery::Misc::StringEquality
             > &flag_aliases_reverse
         ) :
             commands(commands),

@@ -37,6 +37,7 @@
 #include "celery/string/string.h"
 #include "celery/except/base.h"
 #include "value.h"
+#include <celery/misc/string_equal.h>
 
 namespace zelix::cli
 {
@@ -48,39 +49,45 @@ namespace zelix::cli
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > commands;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             value,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > flags;
 
         // Aliases (cmd name -> alias)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > cmd_aliases;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > flag_aliases;
 
         // Aliases (alias -> cmd name)
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > cmd_aliases_reverse;
 
         ankerl::unordered_dense::map<
             Celery::Str::External,
             Celery::Str::External,
-            Celery::Misc::Hash
+            Celery::Misc::Hash,
+			Celery::Misc::StringEquality
         > flag_aliases_reverse;
 
         const int argc;
