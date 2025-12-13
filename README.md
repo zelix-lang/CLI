@@ -1,5 +1,10 @@
 # Zelix CLI
 
+> [!WARNING]
+> Zelix CLI has been discontinued, as our efforts shift towards
+> the Zelix compiler. From now on, Zelix will use [CLI11](https://github.com/CLIUtils/CLI11).
+> Further changes to Zelix CLI may not be made. Please update your code accordingly.
+
 Zelix CLI is a rewrite of the already-existing
 [fluent_libc/cli](https://github.com/rodrigoo-r/cli) in C++ instead of C.
 It is a library that provides a simple way to create command line interfaces
